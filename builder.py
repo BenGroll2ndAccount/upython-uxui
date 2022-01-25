@@ -1,7 +1,7 @@
 from distutils.command.build import build
 from graphics import *
 from testtree import treedata
-from exceptions import *
+from test.uexceptions import *
 from nodes import *
 
 
@@ -15,7 +15,7 @@ def _build_object_tree(data):
     try:
         t = data["top"]
     except:
-        raise EXCEPTION_TNMFT
+        raise uEXCEPTION_CUM
     data = data["top"]
     topnode = DISPLAY(data["properties"], buildChild(data["child"]))
     _tree_out(topnode)
