@@ -8,8 +8,10 @@ data = {
         "child": {
             "type" : "uRECT",
             "properties" : {
+                "width" : 20,
+                "height" : 10,
                 "thickness" : 5,
-                "roundness" : 10
+                "rounding" : 10
             },
             "child" : None
         }

@@ -1,4 +1,6 @@
 from uexceptions import *
+from helperclasses import *
+from drawcallclasses import *
 
 class uNODE():
     def __init__(self, properties, child, constrainX, constrainY, depth):
@@ -19,7 +21,6 @@ class uNODE():
 
     def cue_draw_call(self, data):
         self.attachChild(self.child)
-        print(self.child)
         own_calls = self.getDrawCalls()
         for call in own_calls:
             data.append(call)
@@ -37,11 +38,11 @@ class uNODE():
         elif child["type"] == "uRECT":
             self.child = uRECT(child["properties"], child["child"], depth=self.depth + 1, constrainY = self.constrain_modY(), constrainX = self.constrain_modX())
         else:
-            raise uEXCEPTION_CBE(self.__class__.__name__, self.depth)
+            raise uEXCEPTION_CBW(self.__class__.__name__, self.depth)
         
 class uDISPLAY(uNODE):
     def getDrawCalls(self):
-        return [self.__class__.__name__]
+        return []
 
     def constrain_modX(self):
         return self.constrainX
@@ -51,7 +52,17 @@ class uDISPLAY(uNODE):
 
 class uRECT(uNODE):
     def getDrawCalls(self):
-        return [self.__class__.__name__]
+        try:
+            width = self.properties["width"]
+            height = self.properties["height"]
+        except:
+            raise uEXCEPTION_MRA
+        print(self.properties.keys)
+        position = self.properties["position"] if "position" in self.properties.keys() else 0
+        thickness = self.properties["thickness"] if "thickness" in self.properties.keys() else 1
+        round = self.properties["round"] if "round" in self.properties.keys() else False
+        rounding = self.properties["rounding"] if "rounding" in self.properties.keys() else 0
+        return [udraw_Rect(width=width, height=height, position=position, thickness=thickness, rounded=round, rounding=rounding)]
 
     def constrain_modX(self):
         return self.constrainX
