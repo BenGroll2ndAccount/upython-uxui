@@ -28,7 +28,7 @@ class udraw_Circle():
             raise uEXCEPTION_MRA(causing_class = self.__class__.__name__, depth = "Draw Call")
 
 class udraw_Rect():
-    def __init__(self, thickness : int = 1, rounded: bool = False, rounding: int = 0, position: uPoint = None, width : int = None, height: int = None, pointA : uPoint = None, pointB : uPoint = None):
+    def __init__(self, thickness : int = 1, rounded: bool = False, rounding: int = 0, position: uPoint = None, width : int = None, height: int = None, pointA : uPoint = None, pointB : uPoint = None, color = "white"):
         if position == None or width == None or height == None and pointA != None and pointB != None:
             self.pointA = pointA
             self.pointB = pointB
@@ -41,6 +41,7 @@ class udraw_Rect():
         self.thickness = thickness
         self.rounded = rounded
         self.rounding = rounding
+        self.color = "white"
 
 class udraw_Oval():
     def __init__(self, pointA, pointB):

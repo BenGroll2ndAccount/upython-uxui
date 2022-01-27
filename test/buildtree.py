@@ -44,6 +44,7 @@ def render_calls(zoom):
                 obj.draw(display)
             else:
                 obj = Rectangle(p1 = call.pointA.to_point(), p2 = call.pointB.to_point())
+                obj.setOutline("white")
                 obj.draw(display)
 
     input()
