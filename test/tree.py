@@ -11,7 +11,7 @@ data = {
                 "width" : 20,
                 "height" : 10,
                 "thickness" : 5,
-                "rounding" : 10
+                "rounding" : 10,
             },
             "child" : None
         }

@@ -50,6 +50,12 @@ class uDISPLAY(uNODE):
     def constrain_modY(self):
         return self.constrainY
 
+    def get_dimensions(self):
+        return {
+            "width" : self.properties["width"],
+            "height" : self.properties["height"]
+        }
+
 class uRECT(uNODE):
     def getDrawCalls(self):
         try:
@@ -57,8 +63,7 @@ class uRECT(uNODE):
             height = self.properties["height"]
         except:
             raise uEXCEPTION_MRA
-        print(self.properties.keys)
-        position = self.properties["position"] if "position" in self.properties.keys() else 0
+        position = self.properties["position"] if "position" in self.properties.keys() else uPoint(0, 0)
         thickness = self.properties["thickness"] if "thickness" in self.properties.keys() else 1
         round = self.properties["round"] if "round" in self.properties.keys() else False
         rounding = self.properties["rounding"] if "rounding" in self.properties.keys() else 0
