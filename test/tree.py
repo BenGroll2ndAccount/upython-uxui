@@ -6,7 +6,7 @@ data = {
             "height" : 528,
         },
         "child": {
-            "type" : "uRECT",
+            "type" : "uCARD",
             "properties" : {
                 "width" : 20,
                 "height" : 10,

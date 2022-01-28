@@ -35,8 +35,8 @@ class uNODE():
             return
         if child["type"] == "uDISPLAY":
             self.child = uDISPLAY(child["properties"], child["child"], depth= self.depth + 1, constrainY = self.constrain_modY(), constrainX = self.constrain_modX())
-        elif child["type"] == "uRECT":
-            self.child = uRECT(child["properties"], child["child"], depth=self.depth + 1, constrainY = self.constrain_modY(), constrainX = self.constrain_modX())
+        elif child["type"] == "uCARD":
+            self.child = uCARD(child["properties"], child["child"], depth=self.depth + 1, constrainY = self.constrain_modY(), constrainX = self.constrain_modX())
         else:
             raise uEXCEPTION_CBW(self.__class__.__name__, self.depth)
         
@@ -56,7 +56,7 @@ class uDISPLAY(uNODE):
             "height" : self.properties["height"]
         }
 
-class uRECT(uNODE):
+class uCARD(uNODE):
     def getDrawCalls(self):
         try:
             width = self.properties["width"]
