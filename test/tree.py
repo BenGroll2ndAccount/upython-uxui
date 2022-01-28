@@ -1,3 +1,4 @@
+
 data = {
     "top" : {
         "type" : "uDISPLAY",
@@ -8,12 +9,23 @@ data = {
         "child": {
             "type" : "uCARD",
             "properties" : {
+                "position": (30, 50),
                 "width" : 20,
                 "height" : 10,
                 "thickness" : 5,
                 "rounding" : 10,
+                "filled" : False,
+                "fill-highlight" : True
             },
-            "child" : None
+            "child" : {
+                "type" : "uCARD",
+                "properties" : {
+                    "position" : (35, 45),
+                    "width" : 2,
+                    "height" : 10
+                },
+                "child" : None
+            }
         }
     }
 }
