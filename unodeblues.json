@@ -1,5 +1,5 @@
 {
     "uDISPLAY" : ["width", "height"],
     "uCARD" : ["position", "width", "height", "thickness", "rounding", "filled", "fill-highlight"],
-    "uPERCPOX" : ["modX", "modY", "modXValue", "modYValue", "alignX", "alignY"]
+    "uPBOX" : ["modX", "modY", "modXValue", "modYValue", "alignX", "alignY"]
 }

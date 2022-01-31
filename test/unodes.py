@@ -1,4 +1,5 @@
 from cgitb import small
+from lib2to3.pytree import Node
 from turtle import position
 from uexceptions import *
 from helperclasses import *
@@ -105,3 +106,33 @@ class uCARD(uNODE):
 
     def propmod(self, data):
         return data
+
+class uPBOX(uNODE):
+    def getDrawCalls(self):
+        return []
+
+    def constrain_mod(self) -> uConstrain:
+        child_constrain = uConstrain(shape = "constrain.rect", properties={})
+        if self.properties["modX"]:
+            width = self.constrain.pointB.x - self.constrain.pointA.x
+            pixels_total = width - width * self.properties["modXvalue"]
+            if self.properties["alignX"] == "align.center":
+                newSmallX = self.constrain.pointA.x + (0.5 * pixels_total)
+                newBigX = self.constrain.pointB.x - (0.5 * pixels_total)
+            elif self.properties["alignX"] == "align.start":
+                newSmallX = self.constrain.pointA.x + pixels_total
+                newBigX = self.constrain.pointB.x
+            elif self.properties["alignX"] == "align.end":
+                newSmallX = self.constrain.pointA.x
+                newBigX = self.constrain.pointB.x - pixels_total
+        if self.properties["modY"]:
+            pass 
+
+        
+        height = self.constrain.pointB.y - self.constrain.pointA.y
+
+        
+        
+    def propmod(self, data):
+        return data
+
