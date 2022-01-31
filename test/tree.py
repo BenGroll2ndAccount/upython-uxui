@@ -20,9 +20,9 @@ data = {
             "child" : {
                 "type" : "uCARD",
                 "properties" : {
-                    "position" : (35, 45),
+                    "position" : (35, 55),
                     "width" : 2,
-                    "height" : 10
+                    "height" : 3
                 },
                 "child" : None
             }

@@ -33,24 +33,23 @@ class uNODE():
             return
         if "child" in child.keys():
             if child["type"] == "uDISPLAY":
-                self.child = uDISPLAY(child["properties"], child["child"], depth= self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
+                self.child = uDISPLAY(properties = self.propmod(child["properties"]), child = child["child"], depth= self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
             elif child["type"] == "uCARD":
-                self.child = uCARD(child["properties"], child["child"], depth=self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
+                self.child = uCARD(properties = self.propmod(child["properties"]), child = child["child"], depth=self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
             else:
                 raise uEXCEPTION_CBW(self.__class__.__name__, self.depth)
 
-    def test_if_position_in_constraints(self, position, constrain):
-        if constrain.shape == "constrain.rect":
-            big_x = max(self.constrain.pointA.x, constrain.pointB.x)
-            big_y = max(self.constrain.pointA.y, constrain.pointB.y)
+    def test_if_position_in_constraints(self, position):
+        if self.constrain.shape == "constrain.rect":
+            big_x = max(self.constrain.pointA.x, self.constrain.pointB.x)
+            big_y = max(self.constrain.pointA.y, self.constrain.pointB.y)
             small_x = min(self.constrain.pointA.x, self.constrain.pointB.x)
             small_y = min(self.constrain.pointA.x, self.constrain.pointB.x)
-
             position = uPoint(x = position[0], y = position[1]) if "position" in self.properties.keys() else uPoint(0, 0)
-            if position.x  > big_x or position.y > big_y or position.x < small_x or position.y < small_y:
-                raise uEXCEPTION_WOB(self.__class__.__name__, self.depth)
-            else:
+            if position.x > small_x and position.x < big_x and position.y > small_y and position.y < big_y:
                 return True
+            else:
+                raise uEXCEPTION_WOB(self.__class__.__name__, self.depth)
         return True
         
         
@@ -68,6 +67,9 @@ class uDISPLAY(uNODE):
             "height" : self.properties["height"]
         }
 
+    def propmod(self, data):
+        return data
+
 class uCARD(uNODE):
     def getDrawCalls(self):
         try:
@@ -75,8 +77,9 @@ class uCARD(uNODE):
             height = self.properties["height"]
         except:
             raise uEXCEPTION_MRA
-        self.test_if_position_in_constraints(position = self.properties["position"], constrain=self.constrain)
-        self.test_if_position_in_constraints(position = (self.properties["position"][0] + self.properties["width"], self.properties["position"][1] + self.properties["height"]), constrain=self.constrain)
+        self.test_if_position_in_constraints(position = self.properties["position"])
+        print((self.properties["position"][0] + self.properties["width"], self.properties["position"][1] + self.properties["height"]))
+        self.test_if_position_in_constraints(position = (self.properties["position"][0] + self.properties["width"], self.properties["position"][1] + self.properties["height"]))
         thickness = self.properties["thickness"] if "thickness" in self.properties.keys() else 1
         round = self.properties["round"] if "round" in self.properties.keys() else False
         rounding = self.properties["rounding"] if "rounding" in self.properties.keys() else 0
@@ -100,3 +103,5 @@ class uCARD(uNODE):
             }
         )
 
+    def propmod(self, data):
+        return data
