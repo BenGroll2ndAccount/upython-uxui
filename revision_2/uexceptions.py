@@ -8,3 +8,7 @@ class uHELPEREXCEPTION(Exception):
         self.message = "Error causing Node: " + widget + " : " + message
         super().__init__(self.message) 
 
+class uDRAWEXCEPTION(Exception):
+    def __init__(self, message, widget):
+        self.message = "Error causing Node:" + widget + " : " + message
+        super().__init__(self.message)
