@@ -1,0 +1,119 @@
+{
+    "type" : "uWIDGET",
+    "id" : "movingweekplan",
+    "child": {
+        "type" : "uCOLUMN",
+        "id" : "big-column",
+        "fillH" : true,
+        "fillV" : true,
+        "children" : [
+            {
+                "type" : "uSTRETCH",
+                "id" : "toprow-stretch"
+                "value" : 1,
+                "child" : {
+                    "type" : "uROW",
+                    "id" : "toprow"
+                    "fillH": true,
+                    "fillV": true,
+                    "children" : [
+                        {
+                            "type" : "uPBOX",
+                            "id" : "monday-pbox",
+                            "modXvalue" : 66,
+                            "modYvalue" : 66,
+                            "child" : {
+                                "type" : "uCard",
+                                "id" : "monday-card",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "MO",
+                                "fontWeight" : "highlight.1"
+                            }
+                        },
+                        {
+                            "type" : "uPBOX",
+                            "id" : "tuesday-pbox",
+                            "modXvalue" : 66,
+                            "modYvalue" : 66,
+                            "child" : {
+                                "type" : "uCard",
+                                "id" : "tuesday-card",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "DI",
+                                "fontWeight" : "highlight.1"
+                            }
+                        },
+                        {
+                            "type" : "uPBOX",
+                            "id" : "wednesday-pbox",
+                            "modXvalue" : 66,
+                            "modYvalue" : 66,
+                            "child" : {
+                                "type" : "uCard",
+                                "id" : "wednesday-card",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "MI",
+                                "fontWeight" : "highlight.1"
+                            }
+                        },
+                        {
+                            "type" : "uPBOX",
+                            "id" : "thursday-pbox",
+                            "modXvalue" : 66,
+                            "modYvalue" : 66,
+                            "child" : {
+                                "type" : "uCard",
+                                "id" : "thursday-card",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "MI",
+                                "fontWeight" : "highlight.1"
+                            }
+                        },
+                        {
+                            "type" : "uPBOX",
+                            "modXvalue" : 95,
+                            "modYvalue" : 95,
+                            "child" : {
+                                "type" : "uCard",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "DO",
+                                "fontWeight" : "highlight.1"
+                            }
+                        },
+                        {
+                            "type" : "uPBOX",
+                            "modXvalue" : 95,
+                            "modYvalue" : 95,
+                            "child" : {
+                                "type" : "uCard",
+                                "filled" : true,
+                                "fill-highlight" : true,
+                                "Round" : true,
+                                "Rounding" : 3,
+                                "label" : "DO",
+                                "fontWeight" : "highlight.1"
+                            }
+                        }
+
+                    ]
+                }
+                 
+            }
+        ]
+    }
+}

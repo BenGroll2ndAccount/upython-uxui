@@ -5,6 +5,10 @@ from uexceptions import *
 from helperclasses import *
 from drawcallclasses import *
 
+global not_position_classes 
+not_position_classes = ["uDISPLAY", "uPBOX"]
+
+
 class uNODE():
     def __init__(self, properties, child, constrain : uConstrain, depth, debug__draw_constraints = False):
         self.properties = properties
@@ -13,6 +17,10 @@ class uNODE():
         self.hasChild = False
         self.constrain = constrain
         self.debug__draw_constraints = debug__draw_constraints
+        if self.__class__.__name__ not in not_position_classes and self.properties["position"] == "c0":
+            self.properties["position"] == (self.constrain.pointA.x, self.constrain.pointA.y)
+            self.properties["width"] == max(self.constrain.pointA.x, self.constrain.pointB.x) - min(self.constrain.pointA.x, self.constrain.pointB.x)
+            self.properties["height"] == max(self.constrain.pointA.y, self.constrain.pointB.y) - min(self.constrain.pointA.y, self.constrain.pointB.y)
         self.output()
         
         
@@ -34,9 +42,11 @@ class uNODE():
             return
         if "child" in child.keys():
             if child["type"] == "uDISPLAY":
-                self.child = uDISPLAY(properties = self.propmod(child["properties"]), child = child["child"], depth= self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
+                self.child = uDISPLAY(properties = self.propmod(child), child = child["child"], depth= self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
             elif child["type"] == "uCARD":
-                self.child = uCARD(properties = self.propmod(child["properties"]), child = child["child"], depth=self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
+                self.child = uCARD(properties = self.propmod(child), child = child["child"], depth=self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
+            elif child["type"] == "uPBOX":
+                self.child = uPBOX(properties = self.propmod(child), child = child["child"], depth=self.depth + 1, constrain = self.constrain_mod(), debug__draw_constraints = self.debug__draw_constraints)
             else:
                 raise uEXCEPTION_CBW(self.__class__.__name__, self.depth)
 
@@ -69,7 +79,7 @@ class uDISPLAY(uNODE):
         }
 
     def propmod(self, data):
-        return data
+        return data["properties"]
 
 class uCARD(uNODE):
     def getDrawCalls(self):
@@ -79,7 +89,6 @@ class uCARD(uNODE):
         except:
             raise uEXCEPTION_MRA
         self.test_if_position_in_constraints(position = self.properties["position"])
-        print((self.properties["position"][0] + self.properties["width"], self.properties["position"][1] + self.properties["height"]))
         self.test_if_position_in_constraints(position = (self.properties["position"][0] + self.properties["width"], self.properties["position"][1] + self.properties["height"]))
         thickness = self.properties["thickness"] if "thickness" in self.properties.keys() else 1
         round = self.properties["round"] if "round" in self.properties.keys() else False
@@ -105,34 +114,66 @@ class uCARD(uNODE):
         )
 
     def propmod(self, data):
-        return data
+        return data["properties"]
 
 class uPBOX(uNODE):
     def getDrawCalls(self):
         return []
 
     def constrain_mod(self) -> uConstrain:
-        child_constrain = uConstrain(shape = "constrain.rect", properties={})
         if self.properties["modX"]:
-            width = self.constrain.pointB.x - self.constrain.pointA.x
+            width = max(self.constrain.pointB.x, self.constrain.pointA.x) - min(self.constrain.pointB.x, self.constrain.pointA.x)
+            if not "modXvalue" in self.properties.keys():
+                raise uEXCEPTION_MRA(self.__class__.__name__, self.depth)
             pixels_total = width - width * self.properties["modXvalue"]
             if self.properties["alignX"] == "align.center":
-                newSmallX = self.constrain.pointA.x + (0.5 * pixels_total)
-                newBigX = self.constrain.pointB.x - (0.5 * pixels_total)
+                newSmallX = min(self.constrain.pointA.x, self.constrain.pointB.x) + (0.5 * pixels_total)
+                newBigX = max(self.constrain.pointA.x, self.constrain.pointB.x)
             elif self.properties["alignX"] == "align.start":
-                newSmallX = self.constrain.pointA.x + pixels_total
-                newBigX = self.constrain.pointB.x
+                newSmallX = min(self.constrain.pointA.x, self.constrain.pointB.x) + pixels_total
+                newBigX = max(self.constrain.pointA.x, self.constrain.pointB.x)
             elif self.properties["alignX"] == "align.end":
-                newSmallX = self.constrain.pointA.x
-                newBigX = self.constrain.pointB.x - pixels_total
+                newSmallX = min(self.constrain.pointA.x, self.constrain.pointB.x).x
+                newBigX = max(self.constrain.pointA.x, self.constrain.pointB.x)
         if self.properties["modY"]:
-            pass 
-
-        
-        height = self.constrain.pointB.y - self.constrain.pointA.y
-
+            height = max(self.constrain.pointB.y, self.constrain.pointA.y) - min(self.constrain.pointB.y, self.constrain.pointA.y)
+            if not "modYvalue" in self.properties.keys():
+                raise uEXCEPTION_MRA(self.__class__.__name__, self.depth)
+            pixels_total = width - width * self.properties["modXvalue"]
+            if self.properties["alignY"] == "align.center":
+                newSmallY = min(self.constrain.pointA.y, self.constrain.pointB.y) + (0.5 * pixels_total)
+                newBigY = max(self.constrain.pointA.x, self.constrain.pointB.x) - (0.5 * pixels_total)
+            elif self.properties["alignY"] == "align.start":
+                newSmallY = min(self.constrain.pointA.x, self.constrain.pointB.x) + pixels_total
+                newBigY = max(self.constrain.pointA.x, self.constrain.pointB.x)
+            elif self.properties["alignY"] == "align.end":
+                newSmallY = min(self.constrain.pointA.x, self.constrain.pointB.x)
+                newBigY = max(self.constrain.pointA.x, self.constrain.pointB.x) - pixels_total
+        new_constrain = uConstrain(shape="constrain.rect", properties = {
+            "xA" : newSmallX ,
+            "xB" : newBigX,
+            "yA" : newSmallY,
+            "yB" : newBigY
+            })
+        return new_constrain
         
         
     def propmod(self, data):
-        return data
+        data["properties"]["position"] = "c0"
+        return data["properties"]
 
+class uALIGN(uNODE):
+    def getDrawCalls(self):
+        return []
+
+    def constrain_mod(self) -> uConstrain:
+        return self.constrain
+        
+    def propmod(self, data):
+        if data["type"] == "uPBOX":
+            width_available = max(self.constrain.pointA.x, self.constrain.pointB.x) - min(self.constrain.pointA.x, self.constrain.pointB.x)
+            if "width" in data["properties"].keys():
+                width_taken = data["properties"]["width"]
+            else:
+                width_taken = data["properties"]
+            
