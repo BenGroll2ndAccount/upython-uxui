@@ -9,11 +9,11 @@
         "children" : [
             {
                 "type" : "uSTRETCH",
-                "id" : "toprow-stretch"
+                "id" : "toprow-stretch",
                 "value" : 1,
                 "child" : {
                     "type" : "uROW",
-                    "id" : "toprow"
+                    "id" : "toprow",
                     "fillH": true,
                     "fillV": true,
                     "children" : [

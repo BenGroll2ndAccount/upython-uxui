@@ -1,3 +1,5 @@
+from curses import noecho
+from revision_2.udrawpixel import udraw_Rectangle
 from uexceptions import *
 from abc import abstractmethod
 from typing import List
@@ -134,8 +136,10 @@ class uCARD(NODE):
         if self.children != None:
             raise uBUILDTIMEEXCEPTION("Node is not a multi-child node.", self.__class__.__name__)   
         propcheck(self.__class__.__name__, self.props)
-        if not "thickness" in self.props.keys():
-            self.props["thickness"] = 1
+        self.props["thickness"] = None if not "thickness" in self.props.keys() else self.props["thickness"]
+        self.props["rounding"] = None if not "rounding" in self.props.keys() else self.props["rounding"]
+        self.props[""]
+            
 
     def notify(name, value):
         raise NotImplementedError
@@ -154,7 +158,16 @@ class uCARD(NODE):
 
     def draw(self):
         own_calls = []
-        
+        own_calls.append(
+            udraw_Rectangle(
+                pointA = self.constraints.pointA,
+                pointB = self.constraints.pointB,
+                border_is_highlight = self.props["highlight"] if "highlight" in self.props.keys() else None
+                thickness = self.props["thickness"] if "thickness" in self.props.keys() else None
+                rounding = self.props["rounding"] if "rounding" in self.props.keys() else None
+                round_oct = self.props[""]
+            )
+        )
 
         if self.child != None:
             child_calls = self.child.draw()

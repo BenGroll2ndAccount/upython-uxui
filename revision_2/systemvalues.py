@@ -8,8 +8,7 @@ global darkmode_enabled
 darkmode_enabled = True
 
 global L_darkmode_enabled
-L_darkmode_enabled = []
-
+L_darkmode_enabled = [] 
 
 class nMAP():
     def edit_weekday(value):
