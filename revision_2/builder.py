@@ -29,7 +29,7 @@ class DISPLAY():
         background_color = "black" if sysv.darkmode_enabled else "white"
         for call in calls:
             if call.__class__.__name__ == "udraw_Rectangle":
-                obj = Rectangle(call.pointA, call.pointB)
+                obj = Rectangle(call.pointA.to_point(), call.pointB.to_point())
                 obj.setOutline(highlight_color if call.border_is_highlight else background_color)
                 obj.setFill(highlight_color if call.border_is_highlight else background_color)
                 obj.setWidth(call.thickness)

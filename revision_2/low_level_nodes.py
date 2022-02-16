@@ -1,3 +1,4 @@
+from xml.sax.handler import property_xml_string
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
@@ -9,11 +10,10 @@ from reqprops import propcheck
 
 class NODE():
     def __init__(self, child = None, children : List = None, listening : List = None, props = None):
-        propcheck(props, self.__class__.__name__)
+        self.props = propcheck(props, self.__class__.__name__)
         self.child = child
         self.children = children
         self.listening = listening
-        self.props = props
         if listening != None:
             for entry in listening:
                 splitentry = entry.split(".")
@@ -64,7 +64,6 @@ class uHEAD(NODE):
         self.height = height
         self.child = child
         self.constraints = uConstrain(shape="constrain.rect", properties={"xA" : 0, "yA" :0, "xB" : width, "yB" : height})
-        super().__init__(child=child)
 
     def check_for_build_time_errors(self):
         if (self.child == None and self.children == None):
@@ -96,6 +95,7 @@ class uPBOX(NODE):
     def constrainmod(self, value):
         const = value
         self.constraints = value
+        print(self.constraints)
         new_const = self.constraints
         if "modX" in self.props.keys() and self.props["modX"]:
             width = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
@@ -149,6 +149,9 @@ class uCARD(NODE):
     
     def constrainmod(self, value : uConstrain):
         self.constraints = value
+        print(str(self.constraints.pointA.x) + "," + str(self.constraints.pointA.y) + "," + " : " + str(self.constraints.pointB.x) + "," + str(self.constraints.pointB.y))
+        
+        print(self.props)
         new_constraints = self.constraints
         new_constraints.pointA.x = new_constraints.pointA.x + self.props["thickness"]
         new_constraints.pointA.y = new_constraints.pointA.y + self.props["thickness"]
