@@ -1,5 +1,4 @@
-from curses import noecho
-from revision_2.udrawpixel import udraw_Rectangle
+from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
 from typing import List
@@ -9,8 +8,8 @@ from helperclasses import *
 from reqprops import propcheck
 
 class NODE():
-    def __init__(self, constraints : uConstrain = None, child = None, children : List = None, listening : List = None, props = None):
-        self.constraints = constraints
+    def __init__(self, child = None, children : List = None, listening : List = None, props = None):
+        propcheck(props, self.__class__.__name__)
         self.child = child
         self.children = children
         self.listening = listening
@@ -60,6 +59,13 @@ class NODE():
         return
 
 class uHEAD(NODE):
+    def __init__(self, width, height, child):
+        self.width = width
+        self.height = height
+        self.child = child
+        self.constraints = uConstrain(shape="constrain.rect", properties={"xA" : 0, "yA" :0, "xB" : width, "yB" : height})
+        super().__init__(child=child)
+
     def check_for_build_time_errors(self):
         if (self.child == None and self.children == None):
             raise uBUILDTIMEEXCEPTION("Node needs to have either child or children specified.", self.__class__.__name__)
@@ -70,7 +76,7 @@ class uHEAD(NODE):
     def notify(name, value):
         raise NotImplementedError
     def constrainmod(self):
-        return self.constraints
+        self.child.constrainmod(self.constraints)
     def propmod(self):
         raise NotImplementedError
     def draw(self):
@@ -123,7 +129,8 @@ class uPBOX(NODE):
             self.child.constrainmod(new_const)
 
     def propmod(self):
-        raise NotImplementedError
+        return self.props
+
     def draw(self):
         if self.child != None:
             return self.child.draw()
@@ -134,12 +141,8 @@ class uCARD(NODE):
         if (self.child != None and self.children != None):
             raise uBUILDTIMEEXCEPTION("Node cant have both child and children specified." + self.__class__.__name__)
         if self.children != None:
-            raise uBUILDTIMEEXCEPTION("Node is not a multi-child node.", self.__class__.__name__)   
-        propcheck(self.__class__.__name__, self.props)
-        self.props["thickness"] = None if not "thickness" in self.props.keys() else self.props["thickness"]
-        self.props["rounding"] = None if not "rounding" in self.props.keys() else self.props["rounding"]
-        self.props[""]
-            
+            raise uBUILDTIMEEXCEPTION("Node is not a multi-child node.", self.__class__.__name__)
+        props = propcheck(self.__class__.__name__, self.props)
 
     def notify(name, value):
         raise NotImplementedError
@@ -162,13 +165,12 @@ class uCARD(NODE):
             udraw_Rectangle(
                 pointA = self.constraints.pointA,
                 pointB = self.constraints.pointB,
-                border_is_highlight = self.props["highlight"] if "highlight" in self.props.keys() else None
-                thickness = self.props["thickness"] if "thickness" in self.props.keys() else None
-                rounding = self.props["rounding"] if "rounding" in self.props.keys() else None
-                round_oct = self.props[""]
+                border_is_highlight = self.props["highlight"],
+                thickness = self.props["thickness"],
+                rounding = self.props["rounding"],
+                round_oct = not self.props["rounded"],
             )
         )
-
         if self.child != None:
             child_calls = self.child.draw()
             for call in child_calls:

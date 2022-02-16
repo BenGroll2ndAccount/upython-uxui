@@ -8,7 +8,7 @@ class udraw_Pixel():
                 position : uPoint,
                 highlight : bool = True
                 ):
-        if position != None and highlight != None: # Requirance check
+        if position != None: # Requirance check
             self.position = position #Point Class
             self.highlight = highlight
         else:

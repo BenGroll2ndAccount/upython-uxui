@@ -1,5 +1,4 @@
-
-from helperclasses import uConstrain
+from cmath import rect
 from low_level_nodes import *
 import miscvalues as miscv
 import systemvalues as sysv
@@ -10,6 +9,7 @@ class DISPLAY():
         miscv.global_addL("debug_draw_constraints", self)
         self.head = head
         self.ready = head.assign_depth(0)
+        self.ready = head.constrainmod()
         self.output = head.output()
         self.last_draw_calls = head.draw()
         self.wallpaper = GraphWin("WallPaper", head.constraints.pointB.x, head.constraints.pointB.y)    
@@ -25,15 +25,20 @@ class DISPLAY():
         
     def redraw_all(self):
         calls = self.last_draw_calls
+        highlight_color = "white" if sysv.darkmode_enabled else "black"
+        background_color = "black" if sysv.darkmode_enabled else "white"
         for call in calls:
-            
-    
-d = DISPLAY(
-    uHEAD(
-        constraints = uConstrain("constrain.rect", {"xA" : 0, "xB" : 880, "yA" : 0, "yB" : 528}),
-        child = uPBOX(
-            props={
-            }
-        )
+            if call.__class__.__name__ == "udraw_Rectangle":
+                obj = Rectangle(call.pointA, call.pointB)
+                obj.setOutline(highlight_color if call.border_is_highlight else background_color)
+                obj.setFill(highlight_color if call.border_is_highlight else background_color)
+                obj.setWidth(call.thickness)
+                obj.draw(self.wallpaper)
+
+paper = DISPLAY(
+    head = uHEAD(
+        width = 880,
+        height = 512,
+        child = uCARD()
     )
 )
