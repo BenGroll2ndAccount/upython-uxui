@@ -1,4 +1,6 @@
 from cmath import rect
+from operator import truediv
+from tkinter.tix import Tree
 from low_level_nodes import *
 import miscvalues as miscv
 import systemvalues as sysv
@@ -35,10 +37,17 @@ class DISPLAY():
                 obj.setWidth(call.thickness)
                 obj.draw(self.wallpaper)
 
-paper = DISPLAY(
-    head = uHEAD(
-        width = 880,
-        height = 512,
-        child = uCARD()
+tree = uHEAD(
+    width=880,
+    height=528,
+    child=uPBOX(
+        props={"modX" : True, "modY" : True, "modXvalue" : 50, "modYvalue" : 50},
+        child=uCARD()
     )
+)        
+
+wallpaper = DISPLAY(
+    head = tree
 )
+
+    

@@ -11,6 +11,7 @@ class uPoint():
         return Point(x = self.x, y = self.y)
 
 
+
 class uConstrain():
     def __init__(self, shape : str, properties):
         self.shape = shape
@@ -21,3 +22,6 @@ class uConstrain():
                 self.pointB = uPoint(x = properties["xB"], y = properties["yB"])
             else:
                 raise uHELPEREXCEPTION("Node needs all 4 values specified.", self.__class__.__name__)
+
+    def out(self) -> str:
+        return "(" + str(self.pointA.x) + "|" + str(self.pointA.y) + "),(" + str(self.pointB.x) + "|" + str(self.pointB.y) + ")"

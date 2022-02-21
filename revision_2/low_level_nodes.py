@@ -48,7 +48,8 @@ class NODE():
     def draw(self):
         pass
     def output(self):
-        print((" " * 5 * self.depth) + self.__class__.__name__ + " " * (50 - len(self.__class__.__name__) - 5 * self.depth) + str(self.depth))
+        constraintoutput = str(self.constraints.pointA.x - self.constraints.pointB.x) + "x" + str(self.constraints.pointA.y - self.constraints.pointB.y)
+        print((" " * 5 * self.depth) + self.__class__.__name__ + constraintoutput + " " * (50 - len(self.__class__.__name__) - 5 * self.depth - len(constraintoutput)) + str(self.depth))
         if self.child == None and self.children == None:
             return
         if self.child != None:
@@ -75,6 +76,7 @@ class uHEAD(NODE):
     def notify(name, value):
         raise NotImplementedError
     def constrainmod(self):
+        print(self.constrain)
         self.child.constrainmod(self.constraints)
     def propmod(self):
         raise NotImplementedError
@@ -95,7 +97,7 @@ class uPBOX(NODE):
     def constrainmod(self, value):
         const = value
         self.constraints = value
-        print(self.constraints)
+        print(self.constraints.out())
         new_const = self.constraints
         if "modX" in self.props.keys() and self.props["modX"]:
             width = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
@@ -112,8 +114,13 @@ class uPBOX(NODE):
                 new_const.pointA.x += pixels_to_remove / 2
                 new_const.pointB.x -= pixels_to_remove / 2
         if "modY" in self.props.keys() and self.props["modY"]:
+            print(const.pointA.x)
+            print(const.pointB.x)
             height = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
-            pixels_to_remove = height - height * self.props["modYvalue"] if ["modYvakue"] in self.props.keys() else 0
+            print(self.props)
+            print(self.props.keys())
+            print(height)
+            pixels_to_remove = height - height * self.props["modYvalue"] if "modYvalue" in self.props.keys() else 0
             if "alignY" in self.props.keys():
                 if self.props["alignY"] == "align.center":
                     new_const.pointA.y += pixels_to_remove / 2
