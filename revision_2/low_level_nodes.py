@@ -1,4 +1,3 @@
-from xml.sax.handler import property_xml_string
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
@@ -47,9 +46,15 @@ class NODE():
     @abstractmethod
     def draw(self):
         pass
+
+    def printChild(self):
+        print(self.child)
+        if self.child != None:
+            self.child.printChild()
+
     def output(self):
-        constraintoutput = str(self.constraints.pointA.x - self.constraints.pointB.x) + "x" + str(self.constraints.pointA.y - self.constraints.pointB.y)
-        print((" " * 5 * self.depth) + self.__class__.__name__ + constraintoutput + " " * (50 - len(self.__class__.__name__) - 5 * self.depth - len(constraintoutput)) + str(self.depth))
+        constraintoutput = self.constraints.out()
+        print((" " * 5 * self.depth) + self.__class__.__name__ + " " * (50 - len(self.__class__.__name__) - 5 * self.depth) + str(self.depth) + "   " + constraintoutput)
         if self.child == None and self.children == None:
             return
         if self.child != None:
@@ -65,6 +70,7 @@ class uHEAD(NODE):
         self.height = height
         self.child = child
         self.constraints = uConstrain(shape="constrain.rect", properties={"xA" : 0, "yA" :0, "xB" : width, "yB" : height})
+        print(self.constraints.out())
 
     def check_for_build_time_errors(self):
         if (self.child == None and self.children == None):
@@ -76,7 +82,6 @@ class uHEAD(NODE):
     def notify(name, value):
         raise NotImplementedError
     def constrainmod(self):
-        print(self.constrain)
         self.child.constrainmod(self.constraints)
     def propmod(self):
         raise NotImplementedError
@@ -97,7 +102,6 @@ class uPBOX(NODE):
     def constrainmod(self, value):
         const = value
         self.constraints = value
-        print(self.constraints.out())
         new_const = self.constraints
         if "modX" in self.props.keys() and self.props["modX"]:
             width = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
@@ -114,12 +118,7 @@ class uPBOX(NODE):
                 new_const.pointA.x += pixels_to_remove / 2
                 new_const.pointB.x -= pixels_to_remove / 2
         if "modY" in self.props.keys() and self.props["modY"]:
-            print(const.pointA.x)
-            print(const.pointB.x)
             height = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
-            print(self.props)
-            print(self.props.keys())
-            print(height)
             pixels_to_remove = height - height * self.props["modYvalue"] if "modYvalue" in self.props.keys() else 0
             if "alignY" in self.props.keys():
                 if self.props["alignY"] == "align.center":
@@ -149,23 +148,18 @@ class uCARD(NODE):
             raise uBUILDTIMEEXCEPTION("Node cant have both child and children specified." + self.__class__.__name__)
         if self.children != None:
             raise uBUILDTIMEEXCEPTION("Node is not a multi-child node.", self.__class__.__name__)
-        props = propcheck(self.__class__.__name__, self.props)
-
     def notify(name, value):
         raise NotImplementedError
     
     def constrainmod(self, value : uConstrain):
-        self.constraints = value
-        print(str(self.constraints.pointA.x) + "," + str(self.constraints.pointA.y) + "," + " : " + str(self.constraints.pointB.x) + "," + str(self.constraints.pointB.y))
-        
-        print(self.props)
+        self.constraints = value        
         new_constraints = self.constraints
         new_constraints.pointA.x = new_constraints.pointA.x + self.props["thickness"]
         new_constraints.pointA.y = new_constraints.pointA.y + self.props["thickness"]
         new_constraints.pointB.x = new_constraints.pointB.x - self.props["thickness"]
         new_constraints.pointB.y = new_constraints.pointB.y - self.props["thickness"]
-        return new_constraints
-
+        if not self.child == None:
+            self.child.constrainmod(new_constraints)
     def propmod(self):
         raise NotImplementedError
 

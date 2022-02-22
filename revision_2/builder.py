@@ -1,5 +1,3 @@
-from cmath import rect
-from operator import truediv
 from tkinter.tix import Tree
 from low_level_nodes import *
 import miscvalues as miscv
@@ -10,10 +8,11 @@ class DISPLAY():
         sysv.global_addL("darkmode_enabled", self)
         miscv.global_addL("debug_draw_constraints", self)
         self.head = head
-        self.ready = head.assign_depth(0)
-        self.ready = head.constrainmod()
-        self.output = head.output()
+        self.ready = self.head.assign_depth(0)
+        self.ready = self.head.constrainmod()
+        self.ready = self.head.output()
         self.last_draw_calls = head.draw()
+        self.head.printChild()
         self.wallpaper = GraphWin("WallPaper", head.constraints.pointB.x, head.constraints.pointB.y)    
         self.redraw_all()
         input()
@@ -40,11 +39,13 @@ class DISPLAY():
 tree = uHEAD(
     width=880,
     height=528,
-    child=uPBOX(
-        props={"modX" : True, "modY" : True, "modXvalue" : 50, "modYvalue" : 50},
-        child=uCARD()
+    child=uCARD(
+        props={
+            "thickness" : 10
+        }
     )
-)        
+    )
+ 
 
 wallpaper = DISPLAY(
     head = tree
