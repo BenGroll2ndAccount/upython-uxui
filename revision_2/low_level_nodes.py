@@ -1,3 +1,5 @@
+from cmath import rect
+from turtle import shape
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
@@ -65,13 +67,6 @@ class NODE():
         return
 
 class uHEAD(NODE):
-    def __init__(self, width, height, child):
-        self.width = width
-        self.height = height
-        self.child = child
-        self.constraints = uConstrain(shape="constrain.rect", properties={"xA" : 0, "yA" :0, "xB" : width, "yB" : height})
-        print(self.constraints.out())
-
     def check_for_build_time_errors(self):
         if (self.child == None and self.children == None):
             raise uBUILDTIMEEXCEPTION("Node needs to have either child or children specified.", self.__class__.__name__)
@@ -82,6 +77,8 @@ class uHEAD(NODE):
     def notify(name, value):
         raise NotImplementedError
     def constrainmod(self):
+        self.constraints = uConstrain(shape="constrain.rect", properties={"xA" : 0, "yA" : 0, "xB" : self.props["width"], "yB" : self.props["height"]})
+        print(self.constraints.out())
         self.child.constrainmod(self.constraints)
     def propmod(self):
         raise NotImplementedError
@@ -153,7 +150,7 @@ class uCARD(NODE):
     
     def constrainmod(self, value : uConstrain):
         self.constraints = value        
-        new_constraints = self.constraints
+        new_constraints = uConstrain(shape="constrain.rect", properties={"xA" : self.constraints.pointA.x, "xB" : self.constraints.pointB.x, "yA" : self.constraints.pointA.x, "yB" : self.constraints.pointB.y})
         new_constraints.pointA.x = new_constraints.pointA.x + self.props["thickness"]
         new_constraints.pointA.y = new_constraints.pointA.y + self.props["thickness"]
         new_constraints.pointB.x = new_constraints.pointB.x - self.props["thickness"]

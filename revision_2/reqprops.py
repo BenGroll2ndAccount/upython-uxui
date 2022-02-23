@@ -14,7 +14,11 @@ def check(props, wanted, defaults):
 
 class __PROPERTIES__():
     uHEAD = {
+        "width" : 128,
+        "height" : 214
     }
+
+    uHEAD_req = ["width", "height"]
     
     uPBOX = {
         "modX" : False,

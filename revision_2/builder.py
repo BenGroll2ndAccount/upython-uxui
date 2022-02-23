@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 from low_level_nodes import *
 import miscvalues as miscv
 import systemvalues as sysv
@@ -12,7 +11,7 @@ class DISPLAY():
         self.ready = self.head.constrainmod()
         self.ready = self.head.output()
         self.last_draw_calls = head.draw()
-        self.head.printChild()
+        #self.head.printChild()
         self.wallpaper = GraphWin("WallPaper", head.constraints.pointB.x, head.constraints.pointB.y)    
         self.redraw_all()
         input()
@@ -26,6 +25,7 @@ class DISPLAY():
         
     def redraw_all(self):
         calls = self.last_draw_calls
+        print(calls)
         highlight_color = "white" if sysv.darkmode_enabled else "black"
         background_color = "black" if sysv.darkmode_enabled else "white"
         for call in calls:
@@ -37,12 +37,26 @@ class DISPLAY():
                 obj.draw(self.wallpaper)
 
 tree = uHEAD(
-    width=880,
-    height=528,
+    props = {
+    "width":880,
+    "height":528,
+    },
     child=uCARD(
         props={
             "thickness" : 10
-        }
+        },
+        child=uCARD(
+            props={
+                "thickness" : 5,
+                "border_is_highlight" : False
+            },
+            child=uCARD(
+                props={
+                    "thickness" : 5,
+                    "border_is_highlight" : True
+                }
+            )
+        )
     )
     )
  
