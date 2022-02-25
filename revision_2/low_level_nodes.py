@@ -1,11 +1,9 @@
-from cmath import rect
-from turtle import shape
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
 from typing import List
-import miscvalues as misc
-import systemvalues as sys
+import miscvalues as miscv
+import systemvalues as sysv
 from helperclasses import *
 from reqprops import propcheck
 
@@ -19,9 +17,9 @@ class NODE():
             for entry in listening:
                 splitentry = entry.split(".")
                 if splitentry[0] == "misc":
-                    misc.global_addL(splitentry[1], self)
+                    miscv.global_addL(splitentry[1], self)
                 elif splitentry[0] == "sys":
-                    sys.global_addL(splitentry[1], self)
+                    sysv.global_addL(splitentry[1], self)
 
     def assign_depth(self, value):
         self.depth = value
@@ -97,35 +95,20 @@ class uPBOX(NODE):
         raise NotImplementedError
     
     def constrainmod(self, value):
-        const = value
         self.constraints = value
-        new_const = self.constraints
-        if "modX" in self.props.keys() and self.props["modX"]:
-            width = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
-            pixels_to_remove = width - width * self.props["modXvalue"] if "modXvalue" in self.props.keys() else 0
-            if "alignX" in self.props.keys():
-                if self.props["alignX"] == "align.center":
-                    new_const.pointA.x += pixels_to_remove / 2
-                    new_const.pointB.x -= pixels_to_remove / 2
-                elif self.props["alignX"] == "align.start":
-                    new_const.pointA.x += pixels_to_remove
-                elif self.props["alignX"] == "align.end":
-                    new_const.pointA.x -= pixels_to_remove
-            else:
+        new_const = uConstrain(shape="constrain.rect", properties={"xA" : self.constraints.pointA.x, "xB" : self.constraints.pointB.x, "yA" : self.constraints.pointA.x, "yB" : self.constraints.pointB.y})
+        if self.props["modXvalue"] != 100:
+            modXfactor = self.props["modXvalue"] / 100
+            whole_pixels_horizontal = self.constraints.width
+            pixels_to_remove = whole_pixels_horizontal * (1 - modXfactor)    
+            if self.props["alignX"] == "align.center":
                 new_const.pointA.x += pixels_to_remove / 2
                 new_const.pointB.x -= pixels_to_remove / 2
-        if "modY" in self.props.keys() and self.props["modY"]:
-            height = max(const.pointA.x, const.pointB.x) - min(const.pointA.x, const.pointB.x)
-            pixels_to_remove = height - height * self.props["modYvalue"] if "modYvalue" in self.props.keys() else 0
-            if "alignY" in self.props.keys():
-                if self.props["alignY"] == "align.center":
-                    new_const.pointA.y += pixels_to_remove / 2
-                    new_const.pointB.y -= pixels_to_remove / 2
-                elif self.props["alignY"] == "align.start":
-                    new_const.pointA.y += pixels_to_remove
-                elif self.props["alignY"] == "align.end":
-                    new_const.pointB.y -= pixels_to_remove
-            else:
+        if self.props["modYvalue"] != 100:
+            modYfactor = self.props["modYvalue"] / 100
+            whole_pixels_vertical = self.constraints.height
+            pixels_to_remove = whole_pixels_vertical * (1 - modYfactor)
+            if self.props["alignY"] == "align.center":
                 new_const.pointA.y += pixels_to_remove / 2
                 new_const.pointB.y -= pixels_to_remove / 2
         if self.child != None:

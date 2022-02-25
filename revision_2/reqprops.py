@@ -21,8 +21,6 @@ class __PROPERTIES__():
     uHEAD_req = ["width", "height"]
     
     uPBOX = {
-        "modX" : False,
-        "modY": False,
         "modXvalue" : 100,
         "modYvalue" : 100,
         "alignX" : "align.center",
