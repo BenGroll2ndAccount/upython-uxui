@@ -27,6 +27,8 @@ class DISPLAY():
         
     def redraw_all(self):
         self.last_draw_calls = self.head.draw()
+        for single_call in self.last_draw_calls:
+            print(single_call.out())
         calls = self.last_draw_calls
         highlight_color = "white" if sysv.darkmode_enabled else "black"
         background_color = "black" if sysv.darkmode_enabled else "white"
@@ -53,30 +55,16 @@ tree = uHEAD(
     "width":880,
     "height":528,
     },
-    child=uCARD(
+    child=uROW(
         props={
-            "thickness" : 10
+            "seperator" : 20
         },
-        child=uCARD(
-            props={
-                "thickness" : 5,
-                "highlight" : True,
-                "filled" : False
-            },
-            child=uPBOX(
-                props={
-                    "modXvalue" : 50,
-                    "modYvalue" : 50
-                },
-                child=uCARD(
-                    props={
-                        "thickness" : 10,
-                        "highlight" : True
-                    },
-                )
-            )        
+        children = [
+            uCARD(props={"highlight" : True, "filled" : True, "fill_border" : True}),
+            uCARD(props={"highlight" : True, "filled" : True, "fill_border" : True}),
+            uCARD(props={"highlight" : True, "filled" : True, "fill_border" : True})
+        ]
         )
-    )
     )
  
 

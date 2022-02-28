@@ -49,11 +49,11 @@ class udraw_Rectangle():
         self.rounding = rounding
         self.round_oct = round_oct
         self.filled = filled
-        self.fill_match_border = fill_match_border
+        self.fill_border = fill_match_border
         self.is_debug = is_debug
 
     def out(self):
-        return f"udraw_Rectangle @" + self.pointA.out() + self.pointB.out() + "border_is_highlight: " + str(self.border_is_highlight) + ", thickness: " + str(self.thickness) + ", rounding: " + str(self.rounding) + ", round_oct: " + str(self.round_oct) + ", filled: " + str(self.filled) + ", fill_match_border: " + str(self.fill_match_border) + ", is_debug: " + str(self.is_debug)
+        return f"udraw_Rectangle @" + self.pointA.out() + self.pointB.out() + "border_is_highlight: " + str(self.border_is_highlight) + ", thickness: " + str(self.thickness) + ", rounding: " + str(self.rounding) + ", round_oct: " + str(self.round_oct) + ", filled: " + str(self.filled) + ", fill_match_border: " + str(self.fill_border) + ", is_debug: " + str(self.is_debug)
 class udraw_Circle():
     def __init__(
             self,

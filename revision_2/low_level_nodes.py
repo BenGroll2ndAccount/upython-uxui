@@ -1,3 +1,5 @@
+from pickle import FALSE
+from turtle import width
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
@@ -60,9 +62,16 @@ class NODE():
         if self.child != None:
             self.child.output()    
         elif self.children != None:
-            for child in self.children():
+            for child in self.children:
                 child.output()
         return
+
+    def debugout(self):
+        head = self.__class__.__name__ + "\n"
+        message = head
+        for prop in self.props.keys():
+            message = message +  ">>>>" + prop + ": " + str(self.props[prop]) + "\n"
+        return message
 
 class uHEAD(NODE):
     def check_for_build_time_errors(self):
@@ -153,6 +162,8 @@ class uCARD(NODE):
                 thickness = self.props["thickness"],
                 rounding = self.props["rounding"],
                 round_oct = not self.props["rounded"],
+                filled = self.props["filled"],
+                fill_match_border = self.props["fill_border"]
             )
         )
         if self.child != None:
@@ -160,4 +171,43 @@ class uCARD(NODE):
             for call in child_calls:
                 own_calls.append(call)
         return own_calls
+
+class uROW(NODE):
+    def check_for_buildtime_errors(self):
+        pass
+    def notify(name, value):
+        raise NotImplementedError
+    def constrainmod(self, value : uConstrain):
+        print(self.debugout())
+        self.constraints = value
+        if self.children == None:
+            return
+        constwidth = value.width
+        pixels_for_seperation = (self.props["seperator"] / 100) * constwidth
+        pixels_for_constraints = constwidth - pixels_for_seperation
+        pixels_for_each_seperator = pixels_for_seperation / (len(self.children) + 1) if self.props["include_edges"] == True else pixels_for_seperation / (len(self.children) - 1)
+        pixels_for_each_widget = pixels_for_constraints / len(self.children)
+        for index in range(len(self.children)):
+            if self.props["include_edges"] and self.props["spacing"] == "spacing.equal":
+                self.children[index].constrainmod(uConstrain(properties={
+                    "xA" : self.constraints.pointA.x + pixels_for_each_widget * index + pixels_for_each_seperator * (index + 1),
+                    "xB" : self.constraints.pointA.x + pixels_for_each_widget * (index + 1) + pixels_for_each_seperator * (index + 1),
+                    "yA" : self.constraints.pointA.y,
+                    "yB" : self.constraints.pointB.y,
+                }))
+            elif not self.props["include_edges"] and self.props["spacing"] == "spacing.equal":
+                self.children[index].constrainmod(uConstrain(properties={
+                    "xA" : self.constraints.pointA.x + pixels_for_each_widget * index + pixels_for_each_seperator * index,
+                    "xB" : self.constraints.pointA.x + pixels_for_each_widget * (index + 1) + pixels_for_each_seperator * index,
+                    "yA" : self.constraints.pointA.y,
+                    "yB" : self.constraints.pointB.y
+                }))
+
+    def draw(self):
+        children_calls = []
+        for child in self.children:
+            for draw_call in child.draw():
+                children_calls.append(draw_call)
+        return children_calls
+
     

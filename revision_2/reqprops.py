@@ -13,12 +13,14 @@ def check(props, wanted, defaults):
     return checkedprops
 
 class __PROPERTIES__():
+    ################################# uHEAD 
     uHEAD = {
         "width" : 128,
         "height" : 214
     }
 
     uHEAD_req = ["width", "height"]
+    ################################# uPBOX
     
     uPBOX = {
         "modXvalue" : 100,
@@ -27,7 +29,7 @@ class __PROPERTIES__():
         "alignY" : "align.center"    
     }
     uPBOX_req = []
-    #################################
+    ################################# uCARD
     uCARD = {
         "thickness" : 1,
         "rounded" : False,
@@ -37,6 +39,16 @@ class __PROPERTIES__():
         "highlight" : False
     }
     uCARD_req = []
+    ################################ uROW
+    uROW = {
+        "seperator" : 0,
+        "spacing" : "spacing.equal",
+        "container" : None,
+        "include_edges": False
+    }
+
+    uROW_req = []
+
 
 
         
