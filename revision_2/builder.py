@@ -1,6 +1,7 @@
 from low_level_nodes import *
 import miscvalues as miscv
 import systemvalues as sysv
+import graphics
 
 class DISPLAY():
     def __init__(self, head):
@@ -47,8 +48,6 @@ class DISPLAY():
         while True:
             input()
             sysv.global_edit("darkmode_enabled", "foo")
-        
-
 
 tree = uHEAD(
     props = {
