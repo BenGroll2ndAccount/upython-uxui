@@ -128,7 +128,10 @@ class uPBOX(NODE):
 
     def draw(self):
         if self.child != None:
-            return self.child.draw()
+            childs_draws : List = self.child.draw()
+            if miscv.debug_draw_constraints:
+                childs_draws.append(udraw_Rectangle(pointA=self.constraints.pointA, pointB=self.constraints.pointB, is_debug=True))
+            return childs_draws()
         else:
             return []
 class uCARD(NODE):
@@ -166,6 +169,10 @@ class uCARD(NODE):
                 fill_match_border = self.props["fill_border"]
             )
         )
+        if miscv.debug_draw_constraints:
+            own_calls.append(
+                udraw_Rectangle(pointA=self.constraints.pointA, pointB=self.constraints.pointB, is_debug=True)
+            )
         if self.child != None:
             child_calls = self.child.draw()
             for call in child_calls:
@@ -178,7 +185,6 @@ class uROW(NODE):
     def notify(name, value):
         raise NotImplementedError
     def constrainmod(self, value : uConstrain):
-        print(self.debugout())
         self.constraints = value
         if self.children == None:
             return
@@ -208,6 +214,48 @@ class uROW(NODE):
         for child in self.children:
             for draw_call in child.draw():
                 children_calls.append(draw_call)
+        if miscv.debug_draw_constraints:
+            children_calls.append(udraw_Rectangle(pointA=self.constraints.pointA, pointB=self.constraints.pointB, is_debug=True))
         return children_calls
 
-    
+class uCOLUMN(NODE):
+    def check_for_buildtime_errors(self):
+        pass
+
+    def notify(name, value):
+        raise NotImplementedError
+
+    def constrainmod(self, value : uConstrain):
+        self.constraints = value
+        if self.children == None:
+            return
+        constheight = value.height
+        pixels_for_seperation = (self.props["seperator"] / 100) * constheight
+        pixels_for_constraints = constheight - pixels_for_seperation
+        pixels_for_each_seperator = pixels_for_seperation / (len(self.children) + 1) if self.props["include_edges"] == True else pixels_for_seperation / (len(self.children) - 1)
+        pixels_for_each_widget = pixels_for_constraints / len(self.children)
+        print(pixels_for_each_widget)
+        print(pixels_for_seperation)
+        for index in range(len(self.children)):
+            if self.props["include_edges"] and self.props["spacing"] == "spacing.equal":
+                self.children[index].constrainmod(uConstrain(properties={
+                    "xA" : self.constraints.pointA.x,
+                    "xB" : self.constraints.pointB.x,
+                    "yA" : self.constraints.pointA.y + (pixels_for_each_widget + pixels_for_each_seperator) * (index + 1),
+                    "yB" : self.constraints.pointB.y + pixels_for_each_widget * (index + 1) + pixels_for_each_seperator * (index + 1),
+                }))
+            elif not self.props["include_edges"] and self.props["spacing"] == "spacing.equal":
+                self.children[index].constrainmod(uConstrain(properties={
+                    "xA" : self.constraints.pointA.x,
+                    "xB" : self.constraints.pointB.x,
+                    "yA" : self.constraints.pointA.y + (pixels_for_each_widget + pixels_for_each_seperator) * index,
+                    "yB" : self.constraints.pointB.y + (pixels_for_each_widget + pixels_for_each_seperator) * index + pixels_for_each_widget
+                }))
+    def draw(self):
+        children_calls = []
+        for child in self.children:
+            for draw_call in child.draw():
+                children_calls.append(draw_call)
+        if miscv.debug_draw_constraints:
+            children_calls.append(udraw_Rectangle(pointA=self.constraints.pointA, pointB=self.constraints.pointB, is_debug=True))
+        return children_calls

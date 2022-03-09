@@ -1,4 +1,5 @@
 from math import ldexp
+from graphics import color_rgb
 
 
 global L_debug_draw_constraints
@@ -6,6 +7,12 @@ L_debug_draw_constraints = []
 
 global debug_draw_constraints
 debug_draw_constraints = False
+
+global dark_color
+dark_color = "Gray10"
+
+global light_color
+light_color = "Gray75"
 
 class nMAP():
     def edit_debug_draw_constraints(value):

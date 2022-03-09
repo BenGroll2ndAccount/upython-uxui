@@ -48,6 +48,15 @@ class __PROPERTIES__():
     }
 
     uROW_req = []
+    ################################ uCOLUMN
+    uCOLUMN = {
+        "seperator" : 0,
+        "spacing" : "spacing.equal",
+        "container" : None,
+        "include_edges": False
+    }
+
+    uCOLUMN_req = []
 
 
 
