@@ -1,5 +1,3 @@
-from pickle import FALSE
-from turtle import width
 from udrawcalls import *
 from uexceptions import *
 from abc import abstractmethod
