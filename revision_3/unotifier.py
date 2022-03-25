@@ -1,6 +1,11 @@
+
+
 class uNOTIFIER:
     def __init__(self) -> None:
         self.darkmode_enabled = {"value" : False, "listening" : []}
+        self.debug__draw_constraints = {"value" : False, "listening" : []}
+        self.debug__draw_constraints_color = {"value" : "red", "listening" : []}
+        self.debug__draw_rect_rounding_oct = {"value" : True, "listening" : []}
         
     def change(self, name, value):
         attr = getattr(self, name)
@@ -18,3 +23,4 @@ class uNOTIFIER:
 
 global uNOTIFY
 uNOTIFY = uNOTIFIER()
+
